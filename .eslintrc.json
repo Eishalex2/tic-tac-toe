@@ -12,7 +12,7 @@
     },
     "rules": {
         "no-console": "off",
-        "func-names": "as-needed",
+        "func-names": 1,
         "linebreak-style": ["error", "windows"]
     }
 }
