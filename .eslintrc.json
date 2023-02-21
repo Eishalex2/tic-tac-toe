@@ -13,6 +13,7 @@
     "rules": {
         "no-console": "off",
         "func-names": 1,
-        "linebreak-style": ["error", "windows"]
+        "linebreak-style": ["error", "windows"],
+        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
     }
 }

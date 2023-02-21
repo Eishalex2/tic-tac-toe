@@ -18,6 +18,24 @@ const gameBoard = (function() {
 
   const getBoard = () => board;
 
+  const boardDiv = document.querySelector(".board");
+
+  let rowIndex = 0;
+  let columnIndex = 0;
+  board.forEach(row => {
+    row.forEach(cell => {
+      const cellButton = document.createElement("button");
+      cellButton.classList.add("cell");
+      cellButton.dataset.row = rowIndex;
+      cellButton.dataset.column = columnIndex;
+      columnIndex += 1;
+      cellButton.textContent = '';
+      boardDiv.appendChild(cellButton);
+    })
+    columnIndex = 0;
+    rowIndex += 1;
+  })
+
   return {
     getBoard
   }
@@ -81,30 +99,47 @@ const Player = (name, token) => {
   
   const board = gameBoard.getBoard();
 
-  const getBoard = () => board;
+  let value = '';
 
   const placeToken = (row, column) => {
-    if (board[row-1][column-1] === 0) {
-      board[row-1][column-1] = token;
+    if (board[row][column] === 0) {
+      board[row][column] = token;
+      value = token;
       gameController.checkWinner();
     } else return;
 
-    
     console.log(gameController.getWinner());
     return board;
   }
 
+  const getValue = () => value;
+
   return {
     placeToken,
-    getToken
+    getToken,
+    getValue
   }
 };
 
+const screenController = (function() {
+  const cellBtns = document.getElementsByClassName("cell");
 
+  const Player1 = Player("one", "X");
+  const Player2 = Player("two", "O");
 
-const Player1 = Player("P1", "X");
-const Player2 = Player("P2", "O");
+  let activePlayer = Player1;
 
-Player1.placeToken(1,1);
-Player1.placeToken(1,2);
-Player1.placeToken(1,3);
+  const switchActive = () => {
+    activePlayer = activePlayer === Player1 ? Player2 : Player1;
+  }
+
+  Array.from(cellBtns).forEach(btn => btn.addEventListener("click", (e) => {
+    activePlayer.placeToken(e.target.dataset.row, e.target.dataset.column);
+    e.target.textContent = activePlayer.getValue();
+    // if winner !== 0, run end game function (which should come from
+    // gameController). Display winner. Make buttons unclickable
+
+    switchActive();
+  }))
+
+})();
