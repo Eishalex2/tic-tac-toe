@@ -41,8 +41,6 @@ const gameBoard = (function() {
   }
 })();
 
- // needs work. Probably want to put this out into a codepen as global
- // variables to play around with.
  const gameController = (function() {
   const board = gameBoard.getBoard();
 
@@ -83,11 +81,11 @@ const gameBoard = (function() {
     // if winner!== 0, gameEnd() function. Makes buttons unclickable.
   }
 
-  const getWinner = () => winner;
+  const getWinnerToken = () => winner;
 
   return {
     checkWinner,
-    getWinner,
+    getWinnerToken,
   }
 
 })();
@@ -108,7 +106,7 @@ const Player = (name, token) => {
       gameController.checkWinner();
     } else return;
 
-    console.log(gameController.getWinner());
+    console.log(gameController.getWinnerToken());
     return board;
   }
 
@@ -117,7 +115,8 @@ const Player = (name, token) => {
   return {
     placeToken,
     getToken,
-    getValue
+    getValue,
+    getName
   }
 };
 
@@ -131,6 +130,14 @@ const screenController = (function() {
 
   const switchActive = () => {
     activePlayer = activePlayer === Player1 ? Player2 : Player1;
+  }
+
+  const getWinnerName = () => {
+    if (winner = 0) {
+      return "It's a Tie!";
+    } else {
+      return activePlayer.getName();
+    }
   }
 
   Array.from(cellBtns).forEach(btn => btn.addEventListener("click", (e) => {
