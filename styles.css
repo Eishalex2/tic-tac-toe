@@ -8,3 +8,8 @@
 .cell {
   height: 100px;
 }
+
+.turn {
+  height: 2rem;
+  text-align: center;
+}

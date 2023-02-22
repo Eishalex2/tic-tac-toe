@@ -133,11 +133,14 @@ const Player = (name, token) => {
 
 const screenController = (function() {
   const cellBtns = document.getElementsByClassName("cell");
+  const turnDisplay = document.querySelector(".turn");
+
+
 
   const Player1 = Player("one", "X");
   const Player2 = Player("two", "O");
 
-  const winner = gameController.getWinnerToken;
+  // const winner = gameController.getWinnerToken();
 
   let activePlayer = Player1;
 
@@ -147,13 +150,13 @@ const screenController = (function() {
 
   const getWinnerName = () => {
     let winnerName;
-    if (winner !== 0) {
+    if (gameController.getWinnerToken() !== 0) {
       winnerName = activePlayer.getName();
     } else if (gameController.getEmptySlots() === 0) {
       winnerName = "It's a Tie!";
-    } 
+    }
 
-    if (winnerName) return winnerName;
+    return winnerName;
   }
 
   Array.from(cellBtns).forEach(btn => btn.addEventListener("click", (e) => {
@@ -161,8 +164,15 @@ const screenController = (function() {
     e.target.textContent = activePlayer.getValue();
     // if winner !== 0, run end game function (which should come from
     // gameController). Display winner. Make buttons unclickable
-
-    switchActive();
+    console.log(gameController.getWinnerToken());
+    console.log(getWinnerName())
+    if (getWinnerName()) {
+      turnDisplay.textContent = `And the winner is... ${getWinnerName()}!`;
+      // run endGame
+    } else {
+      switchActive();
+      turnDisplay.textContent = `It's now ${activePlayer.getName()}'s turn!`;
+    }
   }))
 
 })();
