@@ -4,6 +4,12 @@
 
 // make a module to determine the winner
 
+// game isn't finished so long as winner = 0 or at least one of the
+// cells has a value of zero.
+
+// game is finished as soon as all cells are filled (no cells are zero)
+// or winner !== 0.
+
 const gameBoard = (function() {
   const rows = 3;
   const columns = 3;
@@ -78,14 +84,19 @@ const gameBoard = (function() {
       winner = slot2;
     }
 
-    // if winner!== 0, gameEnd() function. Makes buttons unclickable.
   }
+
+  const getEmptySlots = () => {
+    const numRowsWithEmpty = board.filter(row => row.some(cell => cell === 0)).length;
+    return numRowsWithEmpty;
+    }
 
   const getWinnerToken = () => winner;
 
   return {
     checkWinner,
     getWinnerToken,
+    getEmptySlots
   }
 
 })();
@@ -126,6 +137,8 @@ const screenController = (function() {
   const Player1 = Player("one", "X");
   const Player2 = Player("two", "O");
 
+  const winner = gameController.getWinnerToken;
+
   let activePlayer = Player1;
 
   const switchActive = () => {
@@ -133,11 +146,14 @@ const screenController = (function() {
   }
 
   const getWinnerName = () => {
-    if (winner = 0) {
-      return "It's a Tie!";
-    } else {
-      return activePlayer.getName();
-    }
+    let winnerName;
+    if (winner !== 0) {
+      winnerName = activePlayer.getName();
+    } else if (gameController.getEmptySlots() === 0) {
+      winnerName = "It's a Tie!";
+    } 
+
+    if (winnerName) return winnerName;
   }
 
   Array.from(cellBtns).forEach(btn => btn.addEventListener("click", (e) => {
