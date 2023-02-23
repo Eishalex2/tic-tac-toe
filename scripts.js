@@ -11,20 +11,22 @@
 // or winner !== 0.
 
 const gameBoard = (function() {
-  const rows = 3;
-  const columns = 3;
   const board = [];
+  const boardDiv = document.querySelector(".board");
 
-  for (let i=0; i < rows; i++) {
-    board[i] = []
-    for (let j=0; j < columns; j++) {
-      board[i].push(0);
+  const makeBoard = () => {
+    const rows = 3;
+    const columns = 3;
+
+    for (let i=0; i < rows; i++) {
+      board[i] = []
+      for (let j=0; j < columns; j++) {
+        board[i].push(0);
+      }
     }
   }
 
-  const getBoard = () => board;
-
-  const boardDiv = document.querySelector(".board");
+  makeBoard();
 
   let rowIndex = 0;
   let columnIndex = 0;
@@ -40,15 +42,27 @@ const gameBoard = (function() {
     })
     columnIndex = 0;
     rowIndex += 1;
-  })
+  });
+
+  const reset = () => {
+    makeBoard();
+    const cellButton = document.querySelectorAll(".cell");
+    // could not use forEach for reassignment
+    for (cell of cellButton) {
+      cell.textContent = '';
+    };
+    }
+
+  const getBoard = () => board;
 
   return {
-    getBoard
+    getBoard,
+    reset
   }
 })();
 
  const gameController = (function() {
-  let board = gameBoard.getBoard();
+  const board = gameBoard.getBoard();
 
   let winner = 0;
  
@@ -95,6 +109,7 @@ const gameBoard = (function() {
 
   const reset = () => {
     winner = 0;
+    gameBoard.reset();
   }
 
   return {
@@ -120,6 +135,7 @@ const Player = (name, token) => {
       board[row][column] = token;
       value = token;
       gameController.checkWinner();
+      console.table(board);
     } else return;
 
     return board;
@@ -140,9 +156,8 @@ const screenController = (function() {
   const turnDisplay = document.querySelector(".turn");
   const resetBtn = document.querySelector(".reset");
 
-
   resetBtn.addEventListener("click", () => {
-    gameController.reset()
+    gameController.reset();
   });
 
   const Player1 = Player("one", "X");
