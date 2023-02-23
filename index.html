@@ -8,11 +8,37 @@
   <title>Document</title>
 </head>
 <body>
-  <div class="turn"></div>
-  <div class="board">
-    
+  <div class="players">
+    <ul>
+      <div class="p1">
+        <li>
+          <label for="p1-name">Player 1 name: </label>
+          <input type="text" name="p1-name" id="p1-name">
+        </li>
+        <li>
+          Player 1 symbol: X
+        </li>
+      </div>
+      <div class="p2">
+        <li>
+          <label for="p2-name">Player 2 name: </label>
+          <input type="text" name="p2-name" id="p2-name">
+        </li>
+        <li>
+          Player 2 symbol: O
+        </li>
+      </div>
+    </ul>
   </div>
-  <button class="reset">Reset</button>
+
+  <div class="turn"></div>
+  <div class="board-wrap">
+    <div class="board"></div>
+  </div>
+
+  <div class="button">
+    <button class="reset">Reset</button>
+  </div>
   
   <script src="scripts.js"></script>
 </body>

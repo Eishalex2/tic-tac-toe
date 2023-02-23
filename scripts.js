@@ -135,7 +135,6 @@ const Player = (name, token) => {
       board[row][column] = token;
       value = token;
       gameController.checkWinner();
-      console.table(board);
     } else return;
 
     return board;
@@ -155,18 +154,39 @@ const screenController = (function() {
   const cellBtns = document.getElementsByClassName("cell");
   const turnDisplay = document.querySelector(".turn");
   const resetBtn = document.querySelector(".reset");
+  const p1Name = document.getElementById("p1-name");
+  const p2Name = document.getElementById("p2-name");
 
   resetBtn.addEventListener("click", () => {
     gameController.reset();
+    turnDisplay.textContent = "It's now Player 1's turn!";
+    p1Name.value = '';
+    p2Name.value = '';
+    resetBtn.textContent = "Reset";
   });
 
-  const Player1 = Player("one", "X");
-  const Player2 = Player("two", "O");
-
-  // const winner = gameController.getWinnerToken();
+  const Player1 = Player(p1Name.value, "X");
+  const Player2 = Player(p2Name.value, "O");
 
   let activePlayer = Player1;
-  turnDisplay.textContent = `It's now ${activePlayer.getName()}'s turn!`;
+
+  const getActiveName = () => {
+    if (activePlayer === Player1) {
+      if (p1Name.value !== '') {
+        return p1Name.value;
+      } else {
+        return Player1.getToken();
+      }
+    } else {
+      if (p2Name.value !== '') {
+        return p2Name.value;
+      } else {
+        return Player2.getToken();
+      }
+    }
+  }
+
+  turnDisplay.textContent = "It's now Player 1's turn!";
 
   const switchActive = () => {
     activePlayer = activePlayer === Player1 ? Player2 : Player1;
@@ -175,7 +195,7 @@ const screenController = (function() {
   const getWinnerName = () => {
     let winnerName;
     if (gameController.getWinnerToken() !== 0) {
-      winnerName = activePlayer.getName();
+      winnerName = getActiveName();
     } else if (gameController.getEmptySlots() === 0) {
       winnerName = "It's a Tie!";
     }
@@ -184,8 +204,6 @@ const screenController = (function() {
   }
 
   Array.from(cellBtns).forEach(btn => btn.addEventListener("click", (e) => {
-    // if winner !== 0, run end game function (which should come from
-    // gameController). Display winner. Make buttons unclickable
     if (getWinnerName()) {
       turnDisplay.textContent = `And the winner is... ${getWinnerName()}!`;
       // run endGame
@@ -194,9 +212,10 @@ const screenController = (function() {
       e.target.textContent = activePlayer.getValue();
       if (getWinnerName()) {
         turnDisplay.textContent = `And the winner is... ${getWinnerName()}!`;
+        resetBtn.textContent = "Play again?"
       } else {
         switchActive();
-        turnDisplay.textContent = `It's now ${activePlayer.getName()}'s turn!`;
+        turnDisplay.textContent = `It's now ${getActiveName()}'s turn!`;
       }
     }
   }))

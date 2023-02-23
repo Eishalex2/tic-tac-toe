@@ -1,15 +1,61 @@
+.board-wrap {
+  display: flex;
+  justify-content: center;
+}
+
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 3px;
+  width: 306px;
 }
 
 .cell {
   height: 100px;
+  width: 100px;
+  font-size: 48px;
+  text-align: center;
 }
 
 .turn {
   height: 2rem;
   text-align: center;
+}
+
+.players {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-left: 30%;
+  margin-right: 30%;
+  width: 100%;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+input[type="text"] {
+  line-height: 1.5rem;
+  padding-left: 5px;
+}
+
+.reset {
+  padding: 15px 30px;
+  margin-top: 20px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
 }
