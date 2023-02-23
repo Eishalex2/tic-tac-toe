@@ -48,7 +48,7 @@ const gameBoard = (function() {
 })();
 
  const gameController = (function() {
-  const board = gameBoard.getBoard();
+  let board = gameBoard.getBoard();
 
   let winner = 0;
  
@@ -63,7 +63,6 @@ const gameBoard = (function() {
     const slot7 = board[2][1];
     const slot8 = board[2][2];
 
-    console.table(board);
     // check horizontal and vertical
     if (slot0 + slot1 + slot2 === "XXX" || slot0 + slot1 + slot2 === "OOO") {
       winner = slot0;
@@ -84,6 +83,7 @@ const gameBoard = (function() {
       winner = slot2;
     }
 
+    return winner;
   }
 
   const getEmptySlots = () => {
@@ -93,10 +93,15 @@ const gameBoard = (function() {
 
   const getWinnerToken = () => winner;
 
+  const reset = () => {
+    winner = 0;
+  }
+
   return {
     checkWinner,
     getWinnerToken,
-    getEmptySlots
+    getEmptySlots,
+    reset
   }
 
 })();
@@ -117,7 +122,6 @@ const Player = (name, token) => {
       gameController.checkWinner();
     } else return;
 
-    console.log(gameController.getWinnerToken());
     return board;
   }
 
@@ -134,8 +138,12 @@ const Player = (name, token) => {
 const screenController = (function() {
   const cellBtns = document.getElementsByClassName("cell");
   const turnDisplay = document.querySelector(".turn");
+  const resetBtn = document.querySelector(".reset");
 
 
+  resetBtn.addEventListener("click", () => {
+    gameController.reset()
+  });
 
   const Player1 = Player("one", "X");
   const Player2 = Player("two", "O");
@@ -143,6 +151,7 @@ const screenController = (function() {
   // const winner = gameController.getWinnerToken();
 
   let activePlayer = Player1;
+  turnDisplay.textContent = `It's now ${activePlayer.getName()}'s turn!`;
 
   const switchActive = () => {
     activePlayer = activePlayer === Player1 ? Player2 : Player1;
@@ -160,18 +169,20 @@ const screenController = (function() {
   }
 
   Array.from(cellBtns).forEach(btn => btn.addEventListener("click", (e) => {
-    activePlayer.placeToken(e.target.dataset.row, e.target.dataset.column);
-    e.target.textContent = activePlayer.getValue();
     // if winner !== 0, run end game function (which should come from
     // gameController). Display winner. Make buttons unclickable
-    console.log(gameController.getWinnerToken());
-    console.log(getWinnerName())
     if (getWinnerName()) {
       turnDisplay.textContent = `And the winner is... ${getWinnerName()}!`;
       // run endGame
     } else {
-      switchActive();
-      turnDisplay.textContent = `It's now ${activePlayer.getName()}'s turn!`;
+      activePlayer.placeToken(e.target.dataset.row, e.target.dataset.column);
+      e.target.textContent = activePlayer.getValue();
+      if (getWinnerName()) {
+        turnDisplay.textContent = `And the winner is... ${getWinnerName()}!`;
+      } else {
+        switchActive();
+        turnDisplay.textContent = `It's now ${activePlayer.getName()}'s turn!`;
+      }
     }
   }))
 
